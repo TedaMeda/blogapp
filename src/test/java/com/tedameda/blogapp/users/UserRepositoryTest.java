@@ -19,14 +19,14 @@ public class UserRepositoryTest {
     @Test
     @Order(1)
     void can_create_users(){
-        var user = UserEntity.builder().name("ronak").email("ronak@gmail.com").build();
+        var user = UserEntity.builder().username("ronak").email("ronak@gmail.com").build();
         userRepository.save(user);
     }
 
     @Test
     @Order(2)
     void can_find_users(){
-        var user = UserEntity.builder().name("ronak").email("ronak@gmail.com").build();
+        var user = UserEntity.builder().username("ronak").email("ronak@gmail.com").build();
         userRepository.save(user);
 
         var users = userRepository.findAll();

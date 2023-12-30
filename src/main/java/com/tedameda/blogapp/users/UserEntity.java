@@ -24,7 +24,7 @@ public class UserEntity {
     private Long id;
     @Column(nullable = false)
     @NonNull
-    private String name;
+    private String username;
     @Column(nullable = false)
     @NonNull
     private String email;
