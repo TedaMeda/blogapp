@@ -19,7 +19,7 @@ public class UserService {
         UserEntity user = UserEntity.builder().
                                     username(u.getUsername()).
                                     email(u.getEmail()).
-//                                    password(u.getPassword()). //TODO: encrypt password
+                                    password(u.getPassword()). //TODO: encrypt password
                                     build();
 
         return userRepository.save(user);
