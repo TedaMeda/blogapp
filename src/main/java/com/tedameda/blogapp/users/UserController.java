@@ -1,9 +1,11 @@
 package com.tedameda.blogapp.users;
 
 import com.tedameda.blogapp.common.dto.ErrorResponseDTO;
+import com.tedameda.blogapp.security.JWTService;
 import com.tedameda.blogapp.users.dto.CreateUserRequest;
 import com.tedameda.blogapp.users.dto.UserResponse;
 import com.tedameda.blogapp.users.dto.UserLoginRequest;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,44 +26,52 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;
-//    private final AuthenticationManager authenticationManager;
-//    private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
 
-    public UserController(UserService userService, ModelMapper modelMapper){//, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, ModelMapper modelMapper, JWTService jwtService){//, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.modelMapper = modelMapper;
-//        this.authenticationManager = authenticationManager;
-//        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("")
     public ResponseEntity<UserResponse> signupUser(@RequestBody CreateUserRequest request){
-//        Authentication authenticationRequest =
-//                UsernamePasswordAuthenticationToken.unauthenticated(request.getUsername(), request.getPassword());
-//        Authentication authenticationResponse =
-//                this.authenticationManager.authenticate(authenticationRequest);
-
         var savedUser = userService.createUser(request);
         URI savedUserURI = URI.create("/users/"+savedUser.getId());
-        return ResponseEntity.created(savedUserURI).body(modelMapper.map(savedUser, UserResponse.class));
+        UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
+        userResponse.setToken(
+                jwtService.createJwt(userResponse.getId())
+        );
+        return ResponseEntity.created(savedUserURI).body(userResponse);
     }
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> loginUser(@RequestBody UserLoginRequest request){
         var user = userService.loginUser(request.getUsername(), request.getPassword());
-        return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
+        UserResponse userResponse = modelMapper.map(user, UserResponse.class);
+        userResponse.setToken(
+                jwtService.createJwt(userResponse.getId())
+        );
+        return ResponseEntity.ok(userResponse);
     }
 
     public record LoginRequest(String username, String password) {
     }
 
-    @ExceptionHandler({UserService.UserNotFoundException.class})
+    @ExceptionHandler({
+            UserService.UserNotFoundException.class,
+            UserService.InvalidCredentialsException.class
+    })
     ResponseEntity<ErrorResponseDTO> handleException(Exception ex){
         String message;
         HttpStatus status;
         if (ex instanceof UserService.UserNotFoundException){
             message = ex.getMessage();
             status = HttpStatus.NOT_FOUND;
+        }
+        else if(ex instanceof UserService.InvalidCredentialsException){
+            message = ex.getMessage();
+            status = HttpStatus.UNAUTHORIZED;
         }
         else {
             message = "Internal Server Error";
