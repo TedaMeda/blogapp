@@ -1,7 +1,6 @@
 package com.tedameda.blogapp.articles;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author TedaMeda
@@ -11,9 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/articles")
 public class ArticleController {
     ArticleService articleService;
-
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
+    @GetMapping("")
+    String getAllArticles(){
+        return "get all articles";
+    }
+
+    @GetMapping("/{id}")
+    String getArticleById(@PathVariable("id") String id){
+        return "Get article with id"+id;
+    }
+
+    @PostMapping("")
+    String createArticle(){
+        return "article created";
+    }
 }

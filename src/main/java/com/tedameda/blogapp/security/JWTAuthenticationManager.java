@@ -10,23 +10,26 @@ import org.springframework.security.core.AuthenticationException;
  * @since 1/5/2024
  */
 public class JWTAuthenticationManager implements AuthenticationManager{
-    private JWTService jwtService;
-    private UserService userService;
+    private final JWTService jwtService;
+    private final UserService userService;
 
-    public JWTAuthenticationManager(JWTService jwtService) {
+    public JWTAuthenticationManager(JWTService jwtService, UserService userService) {
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if(authentication instanceof JWTAuthentication){
-            var jwtAuthentication = (JWTAuthentication)authentication; // down casting
+        if(authentication instanceof JWTAuthentication jwtAuthentication){
+            // down casting
             var jwt = jwtAuthentication.getCredentials();
             var userId = jwtService.retrieveUserId(jwt);
-            var userEntity = userService.getUser(userId);
-            jwtAuthentication.userEntity = userEntity;
+
+            jwtAuthentication.userEntity = userService.getUser(userId);
             jwtAuthentication.setAuthenticated(true);
+
             return jwtAuthentication;
         }
+        throw new IllegalAccessError("Cannot authenticate this non-JWT authentication");
     }
 }
