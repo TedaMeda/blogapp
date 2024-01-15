@@ -37,7 +37,7 @@ public class ArticleService {
                 .slug(a.getTitle().toLowerCase().replaceAll("\\s+","-"))
                 .body(a.getBody())
                 .author(author)
-                .subtitle(a.getSubTitle())
+                .subtitle(a.getSubtitle())
                 .build()
         );
     }
@@ -48,8 +48,8 @@ public class ArticleService {
             article.setTitle(a.getTitle());
             article.setSlug(a.getTitle().toLowerCase().replaceAll("\\s+","-"));
         }
-        if(a.getSubTitle()!=null){
-            article.setSubtitle(a.getSubTitle());
+        if(a.getSubtitle()!=null){
+            article.setSubtitle(a.getSubtitle());
         }
         if(a.getBody()!=null){
             article.setBody(a.getBody());

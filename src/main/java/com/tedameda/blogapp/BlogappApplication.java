@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class BlogappApplication {
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
@@ -25,4 +22,8 @@ public class BlogappApplication {
 		SpringApplication.run(BlogappApplication.class, args);
 	}
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

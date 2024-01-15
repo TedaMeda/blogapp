@@ -1,5 +1,6 @@
 package com.tedameda.blogapp.articles;
 
+import com.tedameda.blogapp.comments.CommentEntity;
 import com.tedameda.blogapp.users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -9,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author TedaMeda
@@ -44,4 +46,10 @@ public class ArticleEntity {
     @ManyToOne
     @JoinColumn(name = "authorId", nullable = false)
     private UserEntity author;
+
+    @OneToMany
+    @JoinColumn(name = "commentId")
+    @Nullable
+    private List<CommentEntity> commentEntityList;
+
 }

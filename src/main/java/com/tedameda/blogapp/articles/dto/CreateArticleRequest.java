@@ -13,7 +13,7 @@ public class CreateArticleRequest {
     @NonNull
     private String title;
     @Nullable
-    private String subTitle;
+    private String subtitle;
     @NonNull
     private String body;
 }

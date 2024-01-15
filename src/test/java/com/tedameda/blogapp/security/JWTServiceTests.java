@@ -12,7 +12,7 @@ public class JWTServiceTests {
     JWTService jwtService = new JWTService();
     @Test
     void canCreateJwtFromUserId(){
-        var jwt = jwtService.createJwt(1001L);
+        var jwt = jwtService.createJwt(1011L);
         assertNotNull(jwt);
     }
 }

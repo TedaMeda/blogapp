@@ -13,7 +13,7 @@ public class UpdateArticleRequest {
     @Nullable
     private String title;
     @Nullable
-    private String subTitle;
+    private String subtitle;
     @Nullable
     private String body;
 }

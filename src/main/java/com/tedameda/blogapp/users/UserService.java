@@ -24,7 +24,7 @@ public class UserService {
         UserEntity user = UserEntity.builder()
                             .username(u.getUsername())
                             .email(u.getEmail())
-                            .password(passwordEncoder.encode(u.getPassword())) //TODO: encrypt password
+                            .password(passwordEncoder.encode(u.getPassword()))
                             .build();
         return userRepository.save(user);
     }

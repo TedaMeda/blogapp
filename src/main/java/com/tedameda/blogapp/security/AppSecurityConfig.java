@@ -7,6 +7,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
@@ -18,30 +21,20 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 @EnableWebSecurity
 public class AppSecurityConfig{
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
-    private final JWTService jwtService;
-    private final UserService userService;
 
-    public AppSecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, JWTService jwtService, UserService userService) {
+    public AppSecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtService = jwtService;
-        this.userService = userService;
     }
-    @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter() throws Exception{
-        return new JWTAuthenticationFilter(
-                new JWTAuthenticationManager(jwtService,userService)
-        );
-    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf().disable();//TODO: find alternative way to replace this
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.POST,"/users","/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/articles", "/articles/*").permitAll()
+                        .requestMatchers("/h2-console", "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
-        ).httpBasic(Customizer.withDefaults());
-//                .formLogin(Customizer.withDefaults());
-        http.addFilterBefore(jwtAuthenticationFilter, AnonymousAuthenticationFilter.class);
+        ).csrf(AbstractHttpConfigurer::disable).httpBasic(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter, AnonymousAuthenticationFilter.class);
         return http.build();
     }
 

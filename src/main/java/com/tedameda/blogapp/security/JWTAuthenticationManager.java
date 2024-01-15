@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticationException;
  * @author TedaMeda
  * @since 1/5/2024
  */
+
 public class JWTAuthenticationManager implements AuthenticationManager{
     private final JWTService jwtService;
     private final UserService userService;
