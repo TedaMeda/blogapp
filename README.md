@@ -18,4 +18,4 @@
 | `PATCH`    | `/articles/{article-slug}`                             | Update article by slug name              |`Authentication` `Personalization`              |
 | `GET`      | `/articles/{article-slug}/comments`                    | Get article comments by slug name        |`pagination`                                    |
 | `POST`     | `/articles/{article-slug}/comments`                    | Write comments on article                |`Authentication`                                |
-| `DELETE`   | `/articles/{article-slug}/comments/{comment-id}`       |Delete #comment-id comments from article   |`Authentication` `Personalization`              |
+| `DELETE`   | `/articles/{article-slug}/comments/{comment-id}`       |Delete #comment-id comments from article  |`Authentication` `Personalization`              |
