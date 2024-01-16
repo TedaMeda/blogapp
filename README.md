@@ -16,6 +16,6 @@
 | `GET`      | `/articles`                                            | Get all articles                         |`None`                                          |
 | `GET`      | `/articles/{article-slug}`                             | Get article by slug name                 |`None`                                          |
 | `PATCH`    | `/articles/{article-slug}`                             | Update article by slug name              |`Authentication` `Personalization`              |
-| `GET`      | `/articles/{article-slug}/commnets`                    | Get article comments by slug name        |`pagination`                                    |
-| `POST`     | `/articles/{article-slug}/commnets`                    | Write comment on article                 |`Authentication`                                |
-| `DELETE`   | `/articles/{article-slug}/commnets/{comment-id}`     | Delete #comment-id comemnt from article  |`Authentication` `Personalization`              |
+| `GET`      | `/articles/{article-slug}/comments`                    | Get article comments by slug name        |`pagination`                                    |
+| `POST`     | `/articles/{article-slug}/comments`                    | Write comments on article                |`Authentication`                                |
+| `DELETE`   | `/articles/{article-slug}/comments/{comment-id}`       |Delete #comment-id comments from article   |`Authentication` `Personalization`              |
