@@ -57,7 +57,7 @@ public class ArticleService {
         return articleRepository.save(article);
     }
 
-    class ArticleNotFoundException extends IllegalArgumentException{
+    public class ArticleNotFoundException extends IllegalArgumentException{
         public ArticleNotFoundException(String slug){
             super("Article-slug "+slug+" not found");
         }

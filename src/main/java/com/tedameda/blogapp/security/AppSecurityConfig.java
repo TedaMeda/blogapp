@@ -31,7 +31,7 @@ public class AppSecurityConfig{
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.POST,"/users","/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/articles", "/articles/*").permitAll()
-                        .requestMatchers("/h2-console", "/h2-console/**").permitAll()
+                //TODO: Add authentication for comment APIs
                 .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable).httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, AnonymousAuthenticationFilter.class);

@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/articles")
 public class ArticleController {
-    ArticleService articleService;
+    private final ArticleService articleService;
     private final ModelMapper modelMapper;
     public ArticleController(ArticleService articleService, ModelMapper modelMapper) {
         this.articleService = articleService;
@@ -38,6 +38,13 @@ public class ArticleController {
         article.forEach(article1 -> {
             articleResponse.add(modelMapper.map(article1, CreateArticleResponse.class));
         });
+        return ResponseEntity.ok(articleResponse);
+    }
+
+    @GetMapping("/{article-slug}")
+    public ResponseEntity<CreateArticleResponse> getArticleBySlug(@PathVariable("article-slug") String slug){
+        var article = articleService.getArticleBySlug(slug);
+        CreateArticleResponse articleResponse = modelMapper.map(article, CreateArticleResponse.class);
         return ResponseEntity.ok(articleResponse);
     }
 
@@ -57,6 +64,7 @@ public class ArticleController {
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
     @PostMapping("")
     public ResponseEntity<CreateArticleResponse> createArticle(@RequestBody CreateArticleRequest articleRequest, @AuthenticationPrincipal UserEntity user){
         ArticleEntity article = articleService.createArticle(articleRequest, user.getId());

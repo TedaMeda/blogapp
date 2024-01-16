@@ -46,10 +46,11 @@ public class ArticleEntity {
     @ManyToOne
     @JoinColumn(name = "authorId", nullable = false)
     private UserEntity author;
-
+/*
     @OneToMany
     @JoinColumn(name = "commentId")
     @Nullable
     private List<CommentEntity> commentEntityList;
+*/
 
 }

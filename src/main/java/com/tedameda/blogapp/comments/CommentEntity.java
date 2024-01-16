@@ -5,6 +5,7 @@ import com.tedameda.blogapp.users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -33,7 +34,7 @@ public class CommentEntity {
     private String title;
     @NonNull
     private String body;
-    @CreatedDate
+    @CreationTimestamp
     private Date createdAt;
 
     @ManyToOne
