@@ -3,14 +3,17 @@ package com.tedameda.blogapp.comments;
 import com.tedameda.blogapp.articles.ArticleEntity;
 import com.tedameda.blogapp.articles.ArticleService;
 import com.tedameda.blogapp.comments.DTO.CreateCommentRequest;
+import com.tedameda.blogapp.comments.DTO.CreateCommentResponse;
 import com.tedameda.blogapp.common.dto.ErrorResponseDTO;
 import com.tedameda.blogapp.users.UserEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,29 +24,46 @@ import java.util.List;
 @RequestMapping("/articles/{article-slug}/comments")
 public class CommentController {
     private final CommentService commentService;
-    @Autowired
     private final ArticleService articleService;
+    private final ModelMapper modelMapper;
 
-    public CommentController(CommentService commentService, ArticleService articleService) {
+    public CommentController(CommentService commentService, ArticleService articleService, ModelMapper modelMapper) {
         this.commentService = commentService;
         this.articleService = articleService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<CommentEntity>> getComments(@PathVariable("article-slug") String slug){
+    public ResponseEntity<List<CreateCommentResponse>> getComments(@PathVariable("article-slug") String slug){
         ArticleEntity article = articleService.getArticleBySlug(slug);
-        var comments = commentService.getCommentsByArticle(article);
-        //TODO: send List of CreateCommentResponse DTO in response
-        return ResponseEntity.ok(comments);
+        List<CommentEntity> comments = commentService.getCommentsByArticle(article);
+        List<CreateCommentResponse> commentResponses = new ArrayList<>();
+        for (CommentEntity comment : comments) {
+            commentResponses.add(
+//                    modelMapper.map(comment, CreateCommentResponse.class)
+                    CreateCommentResponse.builder()
+                            .title(comment.getTitle())
+                            .body(comment.getBody())
+                            .createdAt(comment.getCreatedAt())
+                            .username(comment.getAuthor().getUsername())
+                            .build()
+            );
+        }
+        return ResponseEntity.ok(commentResponses);
     }
 
     @PostMapping("")
-    public ResponseEntity<CommentEntity> createComment(@RequestBody CreateCommentRequest commentRequest
+    public ResponseEntity<CreateCommentResponse> createComment(@RequestBody CreateCommentRequest commentRequest
             , @PathVariable("article-slug") String slug, @AuthenticationPrincipal UserEntity user){
         ArticleEntity article = articleService.getArticleBySlug(slug);
         CommentEntity comment = commentService.createComment(commentRequest,article,user);
-        //TODO: send CreateCommentResponse DTO in response
-        return ResponseEntity.ok(comment);
+        CreateCommentResponse commentResponse = CreateCommentResponse.builder()
+                .title(comment.getTitle())
+                .body(comment.getBody())
+                .createdAt(comment.getCreatedAt())
+                .username(comment.getAuthor().getUsername())
+                .build();
+        return ResponseEntity.ok(commentResponse);
     }
 
     @DeleteMapping("/{id}")

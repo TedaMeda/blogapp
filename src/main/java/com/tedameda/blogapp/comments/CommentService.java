@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author TedaMeda
@@ -39,7 +40,7 @@ public class CommentService {
 
     public void deleteCommentById(Long id,UserEntity user){
         CommentEntity comment = commentRepository.findById(id).orElseThrow(()->new CommentNotFoundException(id));
-        if(user.getId()==comment.getAuthor().getId()){
+        if(Objects.equals(user.getId(), comment.getAuthor().getId())){
             commentRepository.delete(comment);
         }
         else{

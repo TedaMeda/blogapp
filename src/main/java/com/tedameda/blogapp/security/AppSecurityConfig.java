@@ -30,8 +30,7 @@ public class AppSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.POST,"/users","/users/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/articles", "/articles/*").permitAll()
-                //TODO: Add authentication for comment APIs
+                .requestMatchers(HttpMethod.GET, "/articles", "/articles/*", "/articles/{article-slug}/comments").permitAll()
                 .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable).httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, AnonymousAuthenticationFilter.class);
